@@ -19,7 +19,7 @@ sequenceDiagram
     deactivate server
     Note over server: Browser executes JS code, that fetches the JSON from the server
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/json.js
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate server
     server->>browser: [ { "content": "new note", "date": "2026-10-14" }, ... ]
     deactivate server

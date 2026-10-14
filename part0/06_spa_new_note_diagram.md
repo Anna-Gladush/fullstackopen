@@ -5,7 +5,7 @@ sequenceDiagram
     participant event handler
     participant server
 
-    User->>browser: Creates "new SPA note" via form's input and button 'Save'
+    User->>browser: Creates new note ("new SPA note") via form's input and button 'Save'
     browser->>event handler: Create new note
         Note right of event handler: prevent the default handling of form's submit
     event handler->> event handler:  e.preventDefault()
