@@ -12,7 +12,7 @@ const create = (newObject) => {
 };
 
 const remove = (id) => {
-  return axios.delete(`${baseUrl}/${id}`).catch((err) => console.log(err));
+  return axios.delete(`${baseUrl}/${id}`);
 };
 
 const update = (id, newObject) => {

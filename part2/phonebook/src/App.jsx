@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import personService from "./services/persons"
+import Notification from "./components/Notification";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
@@ -9,6 +10,20 @@ function App() {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [search, setSearch] = useState('');
+  const [message, setMessage] = useState({
+    type: null,
+    description: null
+  });
+
+  const messageFunction = (mes, type) => {
+    setMessage({type, description: mes})
+    setTimeout(() => {
+      setMessage({
+      type: null,
+      description: null
+      })
+    }, 5000)
+  }
 
   const savePersons = (e) => {
     e.preventDefault();
@@ -20,22 +35,29 @@ function App() {
         personService.update(id, personObject).then(returnedPerson => {
           setPersons(persons.map(person => person.id === id ? returnedPerson : person))
         })
+        messageFunction("Number has been changed.", "success")
         return
       }
     }
     personService
       .create(personObject)
       .then(res => {
-        console.log(res)
+        messageFunction(`Added ${newName}`, "success")
         setPersons(persons.concat(res));
         setNewName("");
         setNewNumber("");
       })
       .catch((err) => console.log(err))
+
   }
 
   const remove = (id) => {
-    personService.remove(id);
+    const person = persons.find(pers => pers.id === id)
+    personService
+      .remove(id)
+      .catch(() => {
+        messageFunction(`Information of ${person.name} has already been removed from the server.`, "error")
+      })
     setPersons(persons.filter(n => n.id !== id))
   }
   
@@ -51,6 +73,7 @@ function App() {
     <>
       <div>
       <h2>Phonebook</h2>
+      {message.description ? <Notification message={message} /> : ""}
       <Filter search={search} setSearch={setSearch} persons={persons} />
       <h3>Add a new</h3>
       <PersonForm savePersons={savePersons} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber}/>

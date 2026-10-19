@@ -19,11 +19,6 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": "4"
-    },
-    {
-      "name": "Kosmir Yaz",
-      "number": "32434-31241",
-      "id": "WUpUB2FOrBQ"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
