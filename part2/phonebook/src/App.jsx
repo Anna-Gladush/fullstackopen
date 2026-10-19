@@ -12,11 +12,17 @@ function App() {
 
   const savePersons = (e) => {
     e.preventDefault();
-    if (persons.find(person => person.name === newName)) {
-      alert(`${newName} already added to the phonebook`);
-      return;
-    }
     const personObject = {name: newName, number: newNumber}
+
+    if (persons.find(person => person.name === newName)) {
+      const id = persons.find(person => person.name === newName).id
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        personService.update(id, personObject).then(returnedPerson => {
+          setPersons(persons.map(person => person.id === id ? returnedPerson : person))
+        })
+        return
+      }
+    }
     personService
       .create(personObject)
       .then(res => {
