@@ -1,6 +1,5 @@
 const Filter = ({search, setSearch, persons}) => {
   const searchFilter = persons.filter(person => person.name.toLowerCase().includes(search))
-
   return (
     <div className="search">
       <label id="search">filter shown with a <input id="search" value={search} onChange={(e) => setSearch(e.target.value)}/></label>
