@@ -17,7 +17,7 @@ part3
 part4
   bloglist
 part5
-  bloglist frontend
+  bloglist
 part6
   redux-anecdotes
   redux-unicafe
