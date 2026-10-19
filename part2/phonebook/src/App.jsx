@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from 'axios';
+import personService from "./services/persons"
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
@@ -16,16 +16,24 @@ function App() {
       alert(`${newName} already added to the phonebook`);
       return;
     }
-    setPersons(prev => [...prev, {name: newName, number: newNumber, id: persons.length + 1}]);
+    const personObject = {name: newName, number: newNumber}
+    personService
+      .create(personObject)
+      .then(res => {
+        console.log(res)
+        setPersons(persons.concat(res));
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((err) => console.log(err))
   }
   
   useEffect(() => {
-    axios
-    .get("http://localhost:3001/persons")
-    .then(res => {
-      console.log(res)
-      setPersons(res.data)
-    })
+    personService
+      .getAll()
+      .then(people => {
+        setPersons(people)
+      })
   }, [])
 
 
