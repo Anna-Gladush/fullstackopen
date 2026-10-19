@@ -24,11 +24,6 @@
       "name": "Kosmir Yaz",
       "number": "99-0090-5674",
       "id": "h56ZWCmgWhE"
-    },
-    {
-      "name": "Thorin Oakenshield",
-      "number": "32434-31241",
-      "id": "FxpPiJNw9kU"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

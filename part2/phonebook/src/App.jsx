@@ -27,6 +27,11 @@ function App() {
       })
       .catch((err) => console.log(err))
   }
+
+  const remove = (id) => {
+    personService.remove(id);
+    setPersons(persons.filter(n => n.id !== id))
+  }
   
   useEffect(() => {
     personService
@@ -36,7 +41,6 @@ function App() {
       })
   }, [])
 
-
   return (
     <>
       <div>
@@ -45,7 +49,7 @@ function App() {
       <h3>Add a new</h3>
       <PersonForm savePersons={savePersons} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber}/>
       <h3>Numbers</h3>
-      <Persons persons={persons} />
+      <Persons persons={persons} remove={remove}/>
     </div>
     </>
   )

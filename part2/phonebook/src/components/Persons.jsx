@@ -1,7 +1,18 @@
-const Persons = ({persons}) => {
+const Persons = ({persons, remove}) => {
   return (
     <>
-      {persons.map(person => <p key={person.id}>{person.name} {person.number}</p>)}
+      {persons.map(person => { 
+        return (
+          <div key={person.id}>
+            <p>{person.name} {person.number}</p>
+            <button onClick={() => {
+              if (window.confirm("Do you want to delete this person?")) {
+                remove(person.id)
+              }
+              }}>delete</button>
+          </div>
+        )
+      })}
     </>
   )
 }
