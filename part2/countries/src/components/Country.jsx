@@ -1,18 +1,16 @@
-const Country = ({country}) => {
-  console.log(country)
+import { useState } from "react";
+import CountryInfo from "./CountryInfo";
 
+const Country = ({country}) => {
+  const [show, setShow] = useState(false);
+  console.log("hello",country)
   return (
     <>
-      <h1>{country.name.common}</h1>
-      <p>Capital {country.capital}</p>
-      <p>Area {country.area}</p>
-      <h2>Languages</h2>
-      <ul>
-        {Object.keys(country.languages).map(lang => <li key={lang}>{lang}</li>)}
-      </ul>
-      <img src={country.flags.svg} alt={`flag of ${country.flags.alt}`} />
+      <p>{country.name.common}</p>
+      <button onClick={() => setShow(prev => !prev)}>{show ? "hide" : "show"}</button>
+      <CountryInfo country={country} show={show}/>
     </>
   )
 }
 
-export default Country;
+export default Country
