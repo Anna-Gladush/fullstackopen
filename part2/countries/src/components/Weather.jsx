@@ -9,7 +9,6 @@ const Weather = ({city}) => {
   }, [city])
 
   if (!weather) return <p>Fetching weather data...</p>
-
   return (
     <>
       <h2>Weather in {weather.name}</h2>
