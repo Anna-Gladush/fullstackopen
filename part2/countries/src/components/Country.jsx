@@ -3,7 +3,6 @@ import CountryInfo from "./CountryInfo";
 
 const Country = ({country}) => {
   const [show, setShow] = useState(false);
-  console.log("hello",country)
   return (
     <>
       <p>{country.name.common}</p>

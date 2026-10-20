@@ -6,7 +6,6 @@ const getCountries = () => {
     .catch((err) => console.log(err));
 
   return request.then((res) => {
-    console.log(res);
     return res.data;
   });
 };

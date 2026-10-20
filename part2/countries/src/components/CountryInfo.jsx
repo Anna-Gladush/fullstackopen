@@ -1,5 +1,6 @@
+import Weather from "./Weather";
+
 const CountryInfo = ({country, show}) => {
-  console.log(country)
 
   if (show === false) return null
   return (
@@ -12,6 +13,7 @@ const CountryInfo = ({country, show}) => {
         {Object.keys(country.languages).map(lang => <li key={lang}>{lang}</li>)}
       </ul>
       <img src={country.flags.svg} alt={`flag of ${country.flags.alt}`} />
+      <Weather city={country.capital} />
     </div>
   )
 }

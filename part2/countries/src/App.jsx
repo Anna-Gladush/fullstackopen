@@ -11,14 +11,12 @@ function App() {
     countriesService
       .getCountries()
       .then(res => {
-        console.log(res)
         setCountryList(res)
       })
   }, [])
   
   const searchHandle = (e) => {
     setSearchedCountry(countryList.filter(country => country.name.common.toLowerCase().includes(e.target.value)));
-    console.log(searchedCountry)
   }
 
   if (!countryList) return "Loading..."
