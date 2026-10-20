@@ -1,6 +1,29 @@
 const express = require("express");
+const morgan = require("morgan");
+
 const app = express();
+
 app.use(express.json());
+
+morgan.token("body", (request) => {
+  return JSON.stringify(request.body);
+});
+app.use(
+  morgan((tokens, req, res) => {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, "content-length"),
+      "-",
+      tokens["response-time"](req, res),
+      "ms",
+      JSON.stringify(req.body),
+    ].join(" ");
+
+    // Выводим чистую строку JSON в консоль без лишнего экранирования
+  }),
+);
 
 let persons = [
   {
@@ -30,51 +53,48 @@ const generateID = () => {
 };
 
 app.get("/", (req, res) => {
-  res.send("<h1>Phonebook</h1>");
+  return res.send("<h1>Phonebook</h1>");
 });
 
 app.get("/info", (req, res) => {
-  res.send(
+  return res.send(
     `<p>Phonebook has ${persons.length} people.</p><p>${new Date()}</p>`,
   );
 });
 
 app.get("/api/persons", (req, res) => {
-  res.status(200).json(persons);
+  return res.status(200).json(persons);
 });
 
 app.post("/api/persons", (req, res) => {
   const person = req.body;
-  if (!person.name || !person.number) {
-    return res.status(400).json({ error: "The name or number is missing" });
-  }
   if (persons.find((pers) => pers.name === person.name)) {
     return res.status(400).json({ error: "Name must be unique" });
   }
+  if (!person.name || !person.number) {
+    return res.status(400).json({ error: "The name or number is missing" });
+  }
   person.id = String(generateID());
   persons = persons.concat(person);
-  res.status(201).json(person);
+  return res.status(201).json(person);
 });
 
 app.get("/api/persons/:id", (req, res) => {
   const id = req.params.id;
   const person = persons.find((pers) => pers.id === id);
   if (!person) {
-    res
-      .status(404)
-      .json({
-        error: "Uh Oh! It seems the person you are looking for doesn't exist",
-      })
-      .end();
+    return res.status(404).json({
+      error: "Uh Oh! It seems the person you are looking for doesn't exist",
+    });
   }
-  res.status(200).json(person);
+  return res.status(200).json(person);
 });
 
 app.delete("/api/persons/:id", (req, res) => {
   const id = req.params.id;
   persons = persons.filter((pers) => pers.id !== id);
 
-  res.status(204).end();
+  return res.status(204);
 });
 
 const PORT = process.env.PORT || 3001;
