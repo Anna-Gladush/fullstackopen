@@ -1,13 +1,11 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 
 const app = express();
 
 app.use(express.json());
-
-morgan.token("body", (request) => {
-  return JSON.stringify(request.body);
-});
+app.use(cors());
 app.use(
   morgan((tokens, req, res) => {
     return [
@@ -20,8 +18,6 @@ app.use(
       "ms",
       JSON.stringify(req.body),
     ].join(" ");
-
-    // Выводим чистую строку JSON в консоль без лишнего экранирования
   }),
 );
 
