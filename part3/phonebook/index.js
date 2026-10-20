@@ -28,8 +28,28 @@ app.get("/", (req, res) => {
   res.send("<h1>Phonebook</h1>");
 });
 
+app.get("/info", (req, res) => {
+  res.send(
+    `<p>Phonebook has ${persons.length} people.</p><p>${new Date()}</p>`,
+  );
+});
+
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  res.status(200).json(persons);
+});
+
+app.get("/api/persons/:id", (req, res) => {
+  const id = req.params.id;
+  const person = persons.find((pers) => pers.id === id);
+  if (!person) {
+    res
+      .status(404)
+      .json({
+        error: "Uh Oh! It seems the person you are looking for doesn't exist",
+      })
+      .end();
+  }
+  res.status(200).json(person);
 });
 
 const PORT = process.env.PORT || 3001;
