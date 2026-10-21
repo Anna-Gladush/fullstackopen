@@ -1,6 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const mongoose = "mongoose";
+const Person = require("./models/person");
 
 const app = express();
 
@@ -22,6 +25,11 @@ app.use(
   }),
 );
 
+// MONGO DB
+// const name = process.argv[3];
+// const number = process.argv[4];
+
+// Persons
 let persons = [
   {
     name: "Arto Hellas",
@@ -45,10 +53,6 @@ let persons = [
   },
 ];
 
-const generateID = () => {
-  return Math.floor(Math.random() * 10000);
-};
-
 app.get("/", (req, res) => {
   return res.send("<h1>Phonebook</h1>");
 });
@@ -60,31 +64,49 @@ app.get("/info", (req, res) => {
 });
 
 app.get("/api/persons", (req, res) => {
-  return res.status(200).json(persons);
+  console.log("phonebook:");
+  Person.find({}).then((result) => {
+    result.forEach((pers) => {
+      console.log(`${pers.name} ${pers.number}`);
+    });
+    res.json(result);
+  });
 });
 
 app.post("/api/persons", (req, res) => {
-  const person = req.body;
-  if (persons.find((pers) => pers.name === person.name)) {
-    return res.status(400).json({ error: "Name must be unique" });
-  }
-  if (!person.name || !person.number) {
-    return res.status(400).json({ error: "The name or number is missing" });
-  }
-  person.id = String(generateID());
-  persons = persons.concat(person);
-  return res.status(201).json(person);
+  const body = req.body;
+  // if (persons.find((pers) => pers.name === body.name)) {
+  //   return res.status(400).json({ error: "Name must be unique" });
+  // }
+  // if (!body.name || !body.number) {
+  //   return res.status(400).json({ error: "Name or number is missing" });
+  // }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  });
+
+  person.save().then((savedPerson) => {
+    console.log(`added ${body.name} number ${body.number} to phonebook`);
+    res.status(201).json(savedPerson);
+  });
+  // body.id = String(generateID());
+  // persons = persons.concat(body);
+  // return res.status(201).json(body);
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  const person = persons.find((pers) => pers.id === id);
-  if (!person) {
-    return res.status(404).json({
-      error: "Uh Oh! It seems the person you are looking for doesn't exist",
-    });
-  }
-  return res.status(200).json(person);
+  Person.findById(req.params.id).then((person) => {
+    res.json(person);
+  });
+  // const person = persons.find((pers) => pers.id === id);
+  // if (!person) {
+  //   return res.status(404).json({
+  //     error: "Uh Oh! It seems the person you are looking for doesn't exist",
+  //   });
+  // }
+  // return res.status(200).json(person);
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -94,7 +116,7 @@ app.delete("/api/persons/:id", (req, res) => {
   return res.status(204);
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
