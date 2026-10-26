@@ -25,7 +25,7 @@ test('all blogs are returned', async () => {
   assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
-test.only('unique identifier property of the blog posts is named id', async () => {
+test('unique identifier property of the blog posts is named id', async () => {
   const response = await api.get('/api/blogs')
   const keys = Object.keys(response.body[0])
   console.log(keys)
@@ -60,10 +60,46 @@ test('a valid blog can be added', async () => {
   assert(titles.includes('React patterns'))
 })
 
+test('if the likes property is missing from the request, it will default to the value 0', async () => {
+  const newBlog = {
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDB()
+  const createdBlog = blogsAtEnd.find(blog => blog.title === newBlog.title)
+
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+  assert.strictEqual(createdBlog.likes, 0)
+})
+
 test('blog without title is not added', async () => {
   const newBlog = {
     author: 'Michael Chan',
     url: 'https://reactpatterns.com/',
+    likes: 7,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const blogsAtEnd = await helper.blogsInDB()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+})
+
+test.only('blog without url is not added', async () => {
+  const newBlog = {
+    author: 'Michael Chan',
+    title: 'React patterns',
     likes: 7,
   }
 
