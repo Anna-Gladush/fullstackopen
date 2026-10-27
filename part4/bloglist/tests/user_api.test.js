@@ -64,6 +64,46 @@ describe('when there is initially one user in db', () => {
       assert(result.body.error.includes('expected `username` to be unique'))
       assert.strictEqual(usersAtStart.length, usersAtEnd.length)
     })
+
+    test('creation fails with proper statuscode and message if username is less than 3 characters long', async () => {
+      const usersAtStart = await helper.usersInDB()
+
+      const newUser = {
+        username: 'r',
+        name: 'Superuser',
+        password: 'salainen',
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      const usersAtEnd = await helper.usersInDB()
+
+      assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+    })
+
+    test('creation fails with proper statuscode and message if password is less than 3 characters long', async () => {
+      const usersAtStart = await helper.usersInDB()
+
+      const newUser = {
+        username: 'mavis',
+        name: 'Superuser',
+        password: 'v',
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      const usersAtEnd = await helper.usersInDB()
+
+      assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+    })
   })
 
   after(async () => {
