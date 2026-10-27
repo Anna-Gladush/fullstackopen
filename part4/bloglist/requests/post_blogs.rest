@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Finding the usages of your exports with VS Code",
-  "author": "FullstackOpen, Helsinki",
-  "url": "http://localhost:3003/api/blogs/1",
-  "likes": 190
+  "title": "React patterns",
+  "author": "Michael Chan",
+  "url": "https://reactpatterns.com/",
+  "likes": 13,
+  "userId": "6ae0ae7e06f748bfd4cefe4b"
 }

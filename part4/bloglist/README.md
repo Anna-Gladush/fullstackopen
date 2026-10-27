@@ -1,18 +1,35 @@
 # Bloglist
 
-<!-- Link: <a href="">app</a> -->
+## ! Important !
 
+You should set in <code>.env</code>:
+- MONGODB_URI, 
+- TEST_MONGODB_URI, 
+- SECRET 
+
+
+
+<!-- Link: <a href="">app</a> -->
+## Project structure
+
+```
 ├── controllers
-│   └── blogs.js
+│   ├── blogs.js
+│   └── users.js
 ├── models
-│   └── blog.js
+│   ├── blog.js
+│   └── user.js
 ├── requests
 │   ├── get_blogs.rest
-│   └── post_blogs.rest
+│   ├── get_users.rest
+│   ├── post_blogs.rest
+│   ├── post_users.rest
+│   └── put_blogs.rest
 ├── tests
 │   ├── blog_api.test.js
 │   ├── list_helper.test.js
-│   └── test_helper.js
+│   ├── test_helper.js
+│   └── user_api.test.js
 ├── utils
 │   ├── config.js
 │   ├── list_helper.js
@@ -21,4 +38,5 @@
 ├── app.js
 ├── index.js
 ├── package-lock.json
-├── package.json
+└── package.json
+```
