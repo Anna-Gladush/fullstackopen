@@ -47,12 +47,31 @@ blogsRouter.post('/', async (req, res) => {
 })
 
 blogsRouter.delete('/:id', async (req, res) => {
-  await Blog.findByIdAndDelete(req.params.id)
-  res.status(204).end()
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token invalid' })
+  }
+
+  const user = await User.findById(decodedToken.id)
+  const blog =  await Blog.findById(req.params.id)
+
+  if (user.id.toString() === blog.user.toString()) {
+    await Blog.findByIdAndDelete(req.params.id)
+    res.status(204).end()
+  } else {
+    res.status(401).json({ error: 'Unauthorized. You cannot delete someone else\'s blog' })
+  }
 })
 
 blogsRouter.put('/:id', async (req, res) => {
   const { title, author, url, likes } = req.body
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token invalid' })
+  }
+
+  const user = await User.findById(decodedToken.id)
+  const blogID =  await Blog.findById(req.params.id)
 
   const blog = {
     title,
@@ -60,12 +79,18 @@ blogsRouter.put('/:id', async (req, res) => {
     url,
     likes: likes || 0
   }
-  const newBlog = await Blog.findByIdAndUpdate(req.params.id, blog, {
-    returnDocument: 'after',
-    runValidators: true
-  })
 
-  res.json(newBlog)
+  if (user.id.toString() === blogID.user.toString()) {
+    const newBlog = await Blog.findByIdAndUpdate(req.params.id, blog, {
+      returnDocument: 'after',
+      runValidators: true
+    })
+
+    res.status(200).json(newBlog)
+  } else {
+    res.status(401).json({ error: 'Unauthorized. You cannot edit someone else\'s blog' })
+  }
+
 })
 
 module.exports = blogsRouter
