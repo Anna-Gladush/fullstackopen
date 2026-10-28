@@ -1,10 +1,10 @@
-PUT http://localhost:3003/api/blogs/6ae0aea8b6f23d78c8f8d2b0
+PUT http://localhost:3003/api/blogs/6ae1ba637bf80fbcf7582b9a
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjZhZTA2NTA2YzlhM2NkZDZmOGUzYTQwNyIsImlhdCI6MTc5MzE3NjQwMCwiZXhwIjoxNzkzMTgwMDAwfQ.pBnZGpjtKFMV5PPfvr0iVsXi5eM3CnST-kKDhVMPdgY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1jaGFuIiwiaWQiOiI2YWUwYWU3ZTA2Zjc0OGJmZDRjZWZlNGIiLCJpYXQiOjE3OTMxNzgwMjQsImV4cCI6MTc5MzE4MTYyNH0.mEAyi-IbYROsiiq1VVmJ6CJsfO0AnNwWjSwjePLsWEA
 
 {
-  "title": "React patterns",
+  "title": "React components",
   "author": "Michael Chan",
-  "url": "https://reactpatterns.com/",
-  "likes": 50
+  "url": "https://reactcomponents.com/",
+  "likes": 16
   }
