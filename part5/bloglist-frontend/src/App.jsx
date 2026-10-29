@@ -5,12 +5,7 @@ import Login from './components/Login'
 import loginService from './services/login'
 import CreateBlog from './components/CreateBlog'
 import Notification from './components/Notification'
-
-const dummy = {
-  title: '',
-  author: '',
-  url: '',
-}
+import Toggable from './components/Toggable'
 
 const dummyMessage = {
   type: null,
@@ -23,7 +18,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(dummyMessage)
-  const [newBlog, setNewBlog] = useState(dummy)
+  // const [newBlog, setNewBlog] = useState(dummy)
 
   const messageFunction = (type, mes) => {
     setMessage({ type, description: mes })
@@ -50,20 +45,21 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogUser')
+    const name = user.username
+    setUser(null)
+    blogService.setToken(null)
     window.location.reload();
+    setMessage({ type: 'success', description: `${name} successfully logged out` })
   }
 
-  const handleCreateBlog = async (e) => {
-    e.preventDefault()
-
-    try {
-      blogService.create(newBlog)
-      setBlogs(blogs.concat(newBlog))
-      messageFunction('success', `a new blog ${newBlog.title} by ${newBlog.author} added`)
-      setNewBlog(dummy)
-    } catch (error) {
-      messageFunction('error', error.response.data.error)
-    }
+  const addBlog = blogObject => {
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        messageFunction('success', `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+      })
+      .catch(err => messageFunction('error', err.response.data.error))
   }
 
   useEffect(() => {
@@ -86,11 +82,13 @@ const App = () => {
       <h1>Bloglist</h1>
       {message.type && <Notification message={message} />}
       {!user && <Login username={username} password={password} setUsername={setUsername} setPassword={setPassword} handleLogin={handleLogin} />}
-      {user && <>
+      {user && (<>
         <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-        <CreateBlog handleCreateBlog={handleCreateBlog} newBlog={newBlog} setNewBlog={setNewBlog} />
+        <Toggable buttonLabel="create new blog">
+          <CreateBlog createBlog={addBlog} />
+        </Toggable>
         <Blogs blogs={blogs} />
-      </>}
+      </>)}
     </div>
   )
 }

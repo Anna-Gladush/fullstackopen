@@ -1,4 +1,22 @@
-const CreateBlog = ({ handleCreateBlog, newBlog, setNewBlog }) => {
+import { useState } from "react"
+
+const CreateBlog = ({ createBlog }) => {
+  const [newBlog, setNewBlog] = useState({
+    title: '',
+    author: '',
+    url: ''
+  })
+
+  const addBlog = (e) => {
+    e.preventDefault()
+    if (newBlog === '') return
+    createBlog(newBlog)
+    setNewBlog({
+      title: '',
+      author: '',
+      url: ''
+    })
+  }
 
   const handleInputChange = (e, key) => {
     setNewBlog({
@@ -8,8 +26,8 @@ const CreateBlog = ({ handleCreateBlog, newBlog, setNewBlog }) => {
   }
   return (
     <div>
-      <h2>create new</h2>
-      <form onSubmit={handleCreateBlog}>
+      <h2>create new blog</h2>
+      <form onSubmit={addBlog}>
         <div>
           <label>title <input type="text" id="title" value={newBlog.title} onChange={(e) => handleInputChange(e, 'title')} /></label>
         </div>
