@@ -1,10 +1,10 @@
-const Notification = ({message}) => {
-  const color = message.type === "error" ? "red" : "green"
+const Notification = ({ message }) => {
+  const color = message.type === 'error' ? 'red' : 'green'
   const style = {
     color,
-    background: "lightgrey",
+    background: 'lightgrey',
     fontSize: 20,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
@@ -14,4 +14,4 @@ const Notification = ({message}) => {
   )
 }
 
-export default Notification;
+export default Notification

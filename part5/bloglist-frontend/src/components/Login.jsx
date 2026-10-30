@@ -21,4 +21,4 @@ const Login = ({ username, password, setUsername, setPassword, handleLogin }) =>
   )
 }
 
-export default Login;
+export default Login

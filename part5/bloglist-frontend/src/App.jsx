@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import Login from './components/Login'
@@ -18,7 +18,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(dummyMessage)
-  // const [newBlog, setNewBlog] = useState(dummy)
+
+  const blogFormRef = useRef()
 
   const messageFunction = (type, mes) => {
     setMessage({ type, description: mes })
@@ -28,7 +29,7 @@ const App = () => {
   }
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
@@ -48,18 +49,55 @@ const App = () => {
     const name = user.username
     setUser(null)
     blogService.setToken(null)
-    window.location.reload();
+    window.location.reload()
     setMessage({ type: 'success', description: `${name} successfully logged out` })
   }
 
   const addBlog = blogObject => {
+    blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
       .then(returnedBlog => {
+        const id = returnedBlog.user
+        returnedBlog.user = {
+          id,
+          username: user.username,
+          name: user.name
+        }
         setBlogs(blogs.concat(returnedBlog))
         messageFunction('success', `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
       })
       .catch(err => messageFunction('error', err.response.data.error))
+  }
+
+  const updateLikes = async (id) => {
+    const blogToUpdate = await blogService.getOne(id)
+    blogToUpdate.likes = blogToUpdate.likes + 1
+
+    blogService
+      .update(id, blogToUpdate)
+      .catch(err => messageFunction('error', err.response.data.error))
+
+    const blogsNew = blogs.map(blog => {
+      blog.likes = blog.id === id ? blog.likes + 1 : blog.likes
+      return blog
+    })
+    setBlogs(blogsNew.sort((a, b) => b.likes - a.likes))
+  }
+
+  const handleRemove = async (id) => {
+    const blogToDelete = blogs.filter(blog => blog.id === id)
+    console.log(blogToDelete)
+    if (window.confirm(`Remove blog: ${blogToDelete[0].title}?`)) {
+      await blogService
+        .remove(id)
+        .then(() => {
+          const updatedBlogs = blogs.filter(blog => blog.id !== id)
+          setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes))
+        }
+        )
+        .catch(err => messageFunction('error', err.response.data.error))
+    }
   }
 
   useEffect(() => {
@@ -84,10 +122,10 @@ const App = () => {
       {!user && <Login username={username} password={password} setUsername={setUsername} setPassword={setPassword} handleLogin={handleLogin} />}
       {user && (<>
         <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-        <Toggable buttonLabel="create new blog">
+        <Toggable buttonLabel="create new blog" ref={blogFormRef}>
           <CreateBlog createBlog={addBlog} />
         </Toggable>
-        <Blogs blogs={blogs} />
+        <Blogs blogs={blogs} updateLikes={updateLikes} handleRemove={handleRemove} user={user.name} />
       </>)}
     </div>
   )

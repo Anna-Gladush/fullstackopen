@@ -62,10 +62,10 @@ blogsRouter.put('/:id', userExtractor, async (req, res) => {
     title,
     author,
     url,
-    likes: likes || 0
+    likes: likes
   }
 
-  if (user.id.toString() === blogID.user.toString()) {
+  if (user.id.toString() === blogID.user.toString() || (blogID.title === blog.title && blogID.author === blog.author && blogID.url === blog.url)) {
     const newBlog = await Blog.findByIdAndUpdate(req.params.id, blog, {
       returnDocument: 'after',
       runValidators: true

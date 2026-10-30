@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const CreateBlog = ({ createBlog }) => {
   const [newBlog, setNewBlog] = useState({
@@ -43,4 +43,4 @@ const CreateBlog = ({ createBlog }) => {
   )
 }
 
-export default CreateBlog;
+export default CreateBlog
