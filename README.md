@@ -19,23 +19,17 @@ part4 - Testing Express servers, user administration
   bloglist
 part5* - Current: Testing React apps, React Router
   bloglist
-part6
-  redux-anecdotes
-  redux-unicafe
-part7
-  bloglist
-  country-hook
-  routed-anecdotes
-  ultimate-hooks
-part8
-  library-backend
-  library-frontend
-part9
-  courseinfo
-  first-steps
-  patientor-backend
-  patientor-frontend
 ```
+
+<a href="https://github.com/Anna-Gladush/fullstackopen-statemanagement">part6</a><br/>
+part7<br/>
+part8<br/>
+part9<br/>
+part10<br/>
+part11<br/>
+part12<br/>
+part13<br/>
+part14
 
 ## Certificate
 5 ECTS credits - grade 2 

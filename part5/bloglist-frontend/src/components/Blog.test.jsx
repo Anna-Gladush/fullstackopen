@@ -17,6 +17,10 @@ test('renders title and author of the blog, but doesn\'t render URL or likes by 
 
   const title = screen.getByText('React patterns', { exact: false })
   const author = screen.getByText('Michael Chan', { exact: false })
+  const url = screen.getByText('https://reactpatterns.com/', { exact: false })
+  const likes = screen.getByText('7', { exact: false })
   expect(title).toBeDefined()
   expect(author).toBeDefined()
+  expect(url).toBeNull()
+  expect(likes).toBeNull()
 })
