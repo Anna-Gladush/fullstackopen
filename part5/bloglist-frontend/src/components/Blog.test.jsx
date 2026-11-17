@@ -92,7 +92,7 @@ describe('<Blog>', () => {
     render(<Blog blog={blog} handleRemove={() => console.log('removed')} updateLikes={mockLikeFunction} user={'mchan'} />)
 
     const user = userEvent.setup()
-    screen.debug()
+    // screen.debug()
     const showButton = screen.getByText('view', { exact: false })
     await user.click(showButton)
 
