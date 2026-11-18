@@ -17,8 +17,9 @@ part3 - Programming a server with NodeJS and Express
   phonebook
 part4 - Testing Express servers, user administration
   bloglist
-part5* - Current: Testing React apps, React Router
+part5 - Testing React apps, React Router
   bloglist
+  Playwright
 ```
 
 <a href="https://github.com/Anna-Gladush/fullstackopen-statemanagement">part6</a><br/>
