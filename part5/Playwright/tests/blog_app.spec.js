@@ -28,9 +28,9 @@ describe('Bloglist app', () => {
 
     test('fails with wrong credentials', async ({ page }) => {
       await loginWith(page, 'mluukkai', 'wrong')
-
+      await page.waitForResponse(r => r.status() === 401)
       const errorDiv = page.locator('.error')
-      await expect(errorDiv).toContainText('Wrong credentials').waitFor()
+      await expect(errorDiv).toContainText('Wrong credentials')
       await expect(errorDiv).toHaveCSS('border-style', 'solid')
       await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
 

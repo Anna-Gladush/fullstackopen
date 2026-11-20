@@ -10,7 +10,7 @@ const Notification = ({ message }) => {
     marginBottom: 10,
   }
   return (
-    <p style={style}>{message.description}</p>
+    <p style={style} className="error">{message.description}</p>
   )
 }
 
