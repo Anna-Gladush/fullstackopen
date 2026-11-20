@@ -66,5 +66,24 @@ describe('Bloglist app', () => {
       await page.getByRole('button', { name: 'remove'}).click()
       await expect(page.getByText('Hello Robert C. Martin')).not.toBeVisible()
     })
+
+    test('only the user who added the blog sees the blog\'s delete button', async ({ page, request }) => {
+      await request.post('/api/users', {
+        data: {
+          name: 'Richard M.',
+          username: 'react',
+          password: 'hello-react'
+        }
+      })
+      await createBlog(page, 'Hello', 'Robert C. Martin', 'http://blog.cleancoder.com/uncle-bob/2018/01/01/hello-w0rld.html')
+      await page.getByRole('button', { name: 'view'}).click()
+      await expect(page.getByRole('button', { name: 'remove'})).toBeVisible()
+
+      await page.getByRole('button', { name: 'logout'}).click()
+      await loginWith(page, 'react', 'hello-react')
+      
+      await page.getByRole('button', { name: 'view'}).click()
+      await expect(page.getByRole('button', { name: 'remove'})).not.toBeVisible()
+    })
   })
 })
