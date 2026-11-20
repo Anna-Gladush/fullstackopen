@@ -1,5 +1,5 @@
 const { test, describe, expect, beforeEach } = require('@playwright/test')
-const { loginWith } = require('./helper')
+const { loginWith, createBlog } = require('./helper')
 
 describe('Bloglist app', () => {
   beforeEach(async ({ page, request }) => {
@@ -30,7 +30,7 @@ describe('Bloglist app', () => {
       await loginWith(page, 'mluukkai', 'wrong')
 
       const errorDiv = page.locator('.error')
-      await expect(errorDiv).toContainText('Wrong credentials')
+      await expect(errorDiv).toContainText('Wrong credentials').waitFor()
       await expect(errorDiv).toHaveCSS('border-style', 'solid')
       await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
 
@@ -45,13 +45,17 @@ describe('Bloglist app', () => {
     })
 
     test('a new blog can be created', async ( {page} ) => {
-      await page.getByRole('button', { name: 'create new blog'}).click()
-      await page.getByLabel('title').fill('Hello')
-      await page.getByLabel('author').fill('Robert C. Martin')
-      await page.getByLabel('url').fill('http://blog.cleancoder.com/uncle-bob/2018/01/01/hello-w0rld.html')
-
-      await page.getByRole('button', { name: 'create'}).click()
+      await createBlog(page, 'Hello', 'Robert C. Martin', 'http://blog.cleancoder.com/uncle-bob/2018/01/01/hello-w0rld.html')
       await expect(page.getByText('Hello Robert C. Martin')).toBeVisible()
+    })
+
+    test('a blog can be liked', async ({ page}) => {
+      await createBlog(page, 'Hello', 'Robert C. Martin', 'http://blog.cleancoder.com/uncle-bob/2018/01/01/hello-w0rld.html')
+      await page.getByRole('button', { name: 'view'}).click()
+      await expect(page.getByRole('button', { name: 'like'}).locator('..')).toHaveText('0 like')
+
+      await page.getByRole('button', { name: 'like'}).click()
+      await expect(page.getByRole('button', { name: 'like'}).locator('..')).toHaveText('1 like')
     })
   })
 })
