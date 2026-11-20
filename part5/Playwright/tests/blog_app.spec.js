@@ -81,9 +81,26 @@ describe('Bloglist app', () => {
 
       await page.getByRole('button', { name: 'logout'}).click()
       await loginWith(page, 'react', 'hello-react')
-      
+
       await page.getByRole('button', { name: 'view'}).click()
       await expect(page.getByRole('button', { name: 'remove'})).not.toBeVisible()
+    })
+
+    test('the blogs are arranged in the order according to the likes, the blog with the most likes first', async ({ page }) => {
+      await createBlog(page, 'Hello', 'Robert C. Martin', 'http://blog.cleancoder.com/uncle-bob/2018/01/01/hello-w0rld.html')
+      await page.getByRole('button', { name: 'view'}).click()
+      await page.getByRole('button', { name: 'like'}).click()
+
+      await createBlog(page, 'TDD', 'Robert C. Martin', 'http://blog.cleancoder.com/uncle-bob/2019/03/02/TDD-is-harmful.html')
+
+      await expect(page.getByText('Robert C. Martin', {exact: false}).first()).toHaveText('Hello Robert C. Martin')
+
+      await page.getByRole('button', { name: 'view'}).last().click()
+      await page.getByRole('button', { name: 'like'}).last().click()
+      await page.getByRole('button', { name: 'like'}).last().click()
+      await page.getByRole('button', { name: 'like'}).last().click()
+
+      await expect(page.getByText('Robert C. Martin', {exact: false}).first()).toHaveText('TDD Robert C. Martin')
     })
   })
 })
