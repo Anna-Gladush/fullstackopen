@@ -57,5 +57,14 @@ describe('Bloglist app', () => {
       await page.getByRole('button', { name: 'like'}).click()
       await expect(page.getByRole('button', { name: 'like'}).locator('..')).toHaveText('1 like')
     })
+
+    test('the user who added the blog can delete the blog', async ({ page }) => {
+      await createBlog(page, 'Hello', 'Robert C. Martin', 'http://blog.cleancoder.com/uncle-bob/2018/01/01/hello-w0rld.html')
+      await page.getByRole('button', { name: 'view'}).click()
+      await page.getByRole('button', { name: 'remove'}).click()
+      page.on('dialog', dialog => dialog.accept())
+      await page.getByRole('button', { name: 'remove'}).click()
+      await expect(page.getByText('Hello Robert C. Martin')).not.toBeVisible()
+    })
   })
 })
