@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
+import { useMatch, useNavigate, Routes, Route, Link } from 'react-router-dom'
+
 import Blogs from './components/Blogs'
+import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Login from './components/Login'
 import loginService from './services/login'
@@ -18,7 +21,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(dummyMessage)
-
+  const navigate = useNavigate()
   const blogFormRef = useRef()
 
   const messageFunction = (type, mes) => {
@@ -42,6 +45,7 @@ const App = () => {
     } catch {
       messageFunction('error', 'Wrong credentials')
     }
+    navigate('/')
   }
 
   const handleLogout = () => {
@@ -51,6 +55,7 @@ const App = () => {
     blogService.setToken(null)
     window.location.reload()
     setMessage({ type: 'success', description: `${name} successfully logged out` })
+    navigate('/')
   }
 
   const addBlog = blogObject => {
@@ -100,6 +105,9 @@ const App = () => {
     }
   }
 
+  const match = useMatch('/blogs/:id')
+  const blog = match ? blogs.find(blog => blog.id === match.params.id) : null
+
   useEffect(() => {
     const loggedInUser = window.localStorage.getItem('loggedBlogUser')
     if (loggedInUser) {
@@ -117,16 +125,26 @@ const App = () => {
 
   return (
     <div>
+      <div>
+        <Link to="/">blogs</Link>
+        {!user ? <Link to="/login">login</Link> : <button onClick={handleLogout}>logout</button>}
+      </div>
       <h1>Bloglist</h1>
       {message.type && <Notification message={message} />}
-      {!user && <Login username={username} password={password} setUsername={setUsername} setPassword={setPassword} handleLogin={handleLogin} />}
+      <Routes>
+        <Route></Route>
+        <Route path="/" element={<Blogs blogs={blogs} updateLikes={updateLikes} handleRemove={handleRemove} user={user ? user.name : ''} />} />
+        <Route path="/blogs/:id" element={<Blog blog={blog} updateLikes={updateLikes} handleRemove={handleRemove} user={user ? user.name : ''} />} />
+        <Route path="/login" element={<Login username={username} password={password} setUsername={setUsername} setPassword={setPassword} handleLogin={handleLogin} />} />
+      </Routes>
+      {/* {!user && <Login username={username} password={password} setUsername={setUsername} setPassword={setPassword} handleLogin={handleLogin} />}
       {user && (<>
         <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
         <Toggable buttonLabel="create new blog" ref={blogFormRef}>
           <CreateBlog createBlog={addBlog} />
         </Toggable>
         <Blogs blogs={blogs} updateLikes={updateLikes} handleRemove={handleRemove} user={user.name} />
-      </>)}
+      </>)} */}
     </div>
   )
 }
