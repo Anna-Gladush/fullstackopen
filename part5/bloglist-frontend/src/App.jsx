@@ -1,4 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
+import {
+  useState, useEffect
+  // , useRef
+} from 'react'
+
 import { useMatch, useNavigate, Routes, Route, Link } from 'react-router-dom'
 
 import Blogs from './components/Blogs'
@@ -8,7 +12,7 @@ import Login from './components/Login'
 import loginService from './services/login'
 import CreateBlog from './components/CreateBlog'
 import Notification from './components/Notification'
-import Toggable from './components/Toggable'
+// import Toggable from './components/Toggable'
 
 const dummyMessage = {
   type: null,
@@ -22,7 +26,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(dummyMessage)
   const navigate = useNavigate()
-  const blogFormRef = useRef()
+  // const blogFormRef = useRef()
 
   const messageFunction = (type, mes) => {
     setMessage({ type, description: mes })
@@ -59,7 +63,7 @@ const App = () => {
   }
 
   const addBlog = blogObject => {
-    blogFormRef.current.toggleVisibility()
+    // blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
       .then(returnedBlog => {
@@ -73,6 +77,8 @@ const App = () => {
         messageFunction('success', `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
       })
       .catch(err => messageFunction('error', err.response.data.error))
+    navigate('/')
+
   }
 
   const updateLikes = async (id) => {
@@ -103,6 +109,7 @@ const App = () => {
         )
         .catch(err => messageFunction('error', err.response.data.error))
     }
+    navigate('/')
   }
 
   const match = useMatch('/blogs/:id')
@@ -127,6 +134,7 @@ const App = () => {
     <div>
       <div>
         <Link to="/">blogs</Link>
+        {user && <Link to="/create">new blog</Link>}
         {!user ? <Link to="/login">login</Link> : <button onClick={handleLogout}>logout</button>}
       </div>
       <h1>Bloglist</h1>
@@ -135,16 +143,9 @@ const App = () => {
         <Route></Route>
         <Route path="/" element={<Blogs blogs={blogs} updateLikes={updateLikes} handleRemove={handleRemove} user={user ? user.name : ''} />} />
         <Route path="/blogs/:id" element={<Blog blog={blog} updateLikes={updateLikes} handleRemove={handleRemove} user={user ? user.name : ''} />} />
+        <Route path="/create" element={<CreateBlog createBlog={addBlog} />} />
         <Route path="/login" element={<Login username={username} password={password} setUsername={setUsername} setPassword={setPassword} handleLogin={handleLogin} />} />
       </Routes>
-      {/* {!user && <Login username={username} password={password} setUsername={setUsername} setPassword={setPassword} handleLogin={handleLogin} />}
-      {user && (<>
-        <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-        <Toggable buttonLabel="create new blog" ref={blogFormRef}>
-          <CreateBlog createBlog={addBlog} />
-        </Toggable>
-        <Blogs blogs={blogs} updateLikes={updateLikes} handleRemove={handleRemove} user={user.name} />
-      </>)} */}
     </div>
   )
 }
